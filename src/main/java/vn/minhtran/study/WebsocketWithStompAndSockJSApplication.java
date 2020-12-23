@@ -6,9 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "vn.minhtran.study.stomp")
-public class WebsocketWithStompApplication {
+public class WebsocketWithStompAndSockJSApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebsocketWithStompApplication.class, args);
+        SpringApplication.run(WebsocketWithStompAndSockJSApplication.class, args);
     }
 }
