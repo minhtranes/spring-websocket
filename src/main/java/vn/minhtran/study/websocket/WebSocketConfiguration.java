@@ -28,7 +28,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     }
 
     /*
-     * 1. Browser sends ws://localhost:8081/info to server to establish the socket connection
+     * 1. Browser sends ws://localhost:8081/echo to server to establish the socket connection
      * 
      * 
      */
