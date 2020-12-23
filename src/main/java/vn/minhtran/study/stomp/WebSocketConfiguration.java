@@ -31,7 +31,7 @@ public class WebSocketConfiguration
     /*
      * 1. Browser sends http://localhost:8081/process/info to server to get websocket information
      * 2. Browser sends ws://localhost:8081/{server-id}/{session-id}/{transport} to server to establish WS connection
-     * 3. Browser sends subcription to message
+     * 3. Browser sends subscription to message
      * 
      * 
      */
