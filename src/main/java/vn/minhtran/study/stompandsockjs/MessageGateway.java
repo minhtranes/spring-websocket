@@ -10,7 +10,7 @@
  * Swiss Post Solution.
  * Floor 4-5-8, ICT Tower, Quang Trung Software City
  */
-package vn.minhtran.study.stomp;
+package vn.minhtran.study.stompandsockjs;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
