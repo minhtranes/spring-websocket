@@ -1,6 +1,13 @@
 # spring-websocket
 
 ## Websocket and SockJS
+Access http://jxy.me/websocket-debug-tool/ from Chrome
+Input following:
+* At "URL", input "http://localhost:8081/echo", tick SockJS then hit Connect
+* At "Message Content", input the message you want to send to server. E.g: John. And finally hit Send 
+
+On dev tool of your browser, switch to tab Network, filter WS and Messages to see how SockJS heartbeat messages are sent
+
 ## Websocket and Stomp and SockJS
 Access http://jxy.me/websocket-debug-tool/ from Chrome
 Input following:
