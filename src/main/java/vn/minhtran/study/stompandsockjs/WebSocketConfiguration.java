@@ -23,38 +23,50 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration
-        extends AbstractWebSocketMessageBrokerConfigurer {
+		extends
+			AbstractWebSocketMessageBrokerConfigurer {
 
-    @Bean
-    SimpleTextWebSocketHandler webSocketHandler() {
-        return new SimpleTextWebSocketHandler();
-    }
-    /*
-     * 1. Browser sends http://localhost:8081/process/info to server to get websocket information
-     * 2. Browser sends ws://localhost:8081/{server-id}/{session-id}/{transport} to server to establish WS connection
-     * 3. Browser sends subscription to message
-     * 
-     * 
-     */
+	@Bean
+	SimpleTextWebSocketHandler webSocketHandler() {
+		return new SimpleTextWebSocketHandler();
+	}
+	/*
+	 * 1. Browser sends http://localhost:8081/process/info to server to get
+	 * websocket information 2. Browser sends
+	 * ws://localhost:8081/{server-id}/{session-id}/{transport} to server to
+	 * establish WS connection 3. Browser sends subscription to message
+	 * 
+	 * 
+	 */
+	@Bean
+	ThreadPoolTaskScheduler sockJSHeartBeatScheduler() {
+		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+		threadPoolTaskScheduler.setPoolSize(1);
+		threadPoolTaskScheduler.setThreadNamePrefix("sockjs-heartbeat-");
+		return threadPoolTaskScheduler;
+	}
 
-    @Bean
-    ThreadPoolTaskScheduler heartBeatScheduler() {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(1);
-        threadPoolTaskScheduler.setThreadNamePrefix("ws-heartbeat-");
-        return threadPoolTaskScheduler;
-    }
+	@Bean
+	ThreadPoolTaskScheduler heartBeatScheduler() {
+		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+		threadPoolTaskScheduler.setPoolSize(1);
+		threadPoolTaskScheduler.setThreadNamePrefix("ws-heartbeat-");
+		return threadPoolTaskScheduler;
+	}
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/process").setAllowedOrigins("*").withSockJS();
-    }
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/process").setAllowedOrigins("*").withSockJS()
+				.setTaskScheduler(sockJSHeartBeatScheduler())
+				.setHeartbeatTime(15000);
+	}
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app")
-            .enableSimpleBroker("/topic").setTaskScheduler(heartBeatScheduler())
-            .setHeartbeatValue(new long[] { 15000, 15000 });
-    }
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.setApplicationDestinationPrefixes("/app")
+				.enableSimpleBroker("/topic")
+				.setTaskScheduler(heartBeatScheduler())
+				.setHeartbeatValue(new long[]{15000, 15000});
+	}
 
 }
