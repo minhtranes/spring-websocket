@@ -15,6 +15,7 @@ package vn.minhtran.study.stompandsockjs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -36,6 +37,14 @@ public class WebSocketConfiguration
      * 
      */
 
+    @Bean
+    ThreadPoolTaskScheduler heartBeatScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(1);
+        threadPoolTaskScheduler.setThreadNamePrefix("ws-heartbeat-");
+        return threadPoolTaskScheduler;
+    }
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/process").setAllowedOrigins("*").withSockJS();
@@ -43,8 +52,9 @@ public class WebSocketConfiguration
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes("/app")
+            .enableSimpleBroker("/topic").setTaskScheduler(heartBeatScheduler())
+            .setHeartbeatValue(new long[] { 15000, 15000 });
     }
 
 }
